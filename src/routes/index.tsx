@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
+import { toast } from "sonner";
 
 import { Badge, Button, Field, Input, Panel, Stat } from "@/components/kit";
 import { IpfsPinPanel } from "@/components/IpfsPinPanel";
