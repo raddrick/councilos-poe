@@ -204,6 +204,36 @@ function Console() {
         </Panel>
       </div>
 
+      <div className="mt-6 grid gap-6 lg:grid-cols-2">
+        <IpfsPinPanel
+          title="Pin product metadata"
+          onUse={(uri) => {
+            setMetadataURI(uri);
+            toast.success("Metadata URI filled in");
+          }}
+        />
+        <Panel
+          title="IPFS metadata"
+          subtitle="How the metadata URI works in CouncilOS."
+        >
+          <div className="space-y-3 text-sm text-muted-foreground">
+            <p>
+              The contract stores a <code className="text-foreground">metadataURI</code> string for
+              every product and effort. You can point it to any URL, but IPFS is the usual choice
+              because the content is content-addressed.
+            </p>
+            <p>
+              Paste a JSON blob here, click <strong>Pin to IPFS</strong>, and the console returns an{" "}
+              <code className="text-foreground">ipfs://…</code> URI. Use the product metadata panel
+              on the left or the effort metadata field on a council page.
+            </p>
+            <p className="label-mono">
+              Requires a Pinata JWT secret. Add it via the secure form when prompted.
+            </p>
+          </div>
+        </Panel>
+      </div>
+
       <Panel className="mt-6" title="Effort ledger" subtitle="All Proof of Effort records on-chain.">
         {data && data.efforts.length === 0 && <p className="label-mono">No efforts submitted yet.</p>}
         <div className="flex flex-col gap-2">

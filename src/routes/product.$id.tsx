@@ -3,6 +3,7 @@ import { keccak256, toUtf8Bytes } from "ethers";
 import { useState } from "react";
 
 import { Badge, Button, Field, Input, Panel, Select, Stat } from "@/components/kit";
+import { IpfsPinPanel } from "@/components/IpfsPinPanel";
 import {
   CHAIR_STATUS,
   EFFORT_STATUS,
