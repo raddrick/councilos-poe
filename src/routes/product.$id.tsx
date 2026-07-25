@@ -1,6 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { keccak256, toUtf8Bytes } from "ethers";
 import { useState } from "react";
+import { toast } from "sonner";
 
 import { Badge, Button, Field, Input, Panel, Select, Stat } from "@/components/kit";
 import { IpfsPinPanel } from "@/components/IpfsPinPanel";
