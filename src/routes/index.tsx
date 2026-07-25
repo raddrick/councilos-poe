@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 
 import { Badge, Button, Field, Input, Panel, Stat } from "@/components/kit";
+import { IpfsPinPanel } from "@/components/IpfsPinPanel";
 import {
   EFFORT_STATUS,
   PARTICIPANT_ROLES,
