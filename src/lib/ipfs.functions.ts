@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 
 export const pinJsonToIpfs = createServerFn({ method: "POST" })
-  .inputValidator((input: unknown) => {
+  .validator((input: unknown) => {
     if (typeof input !== "object" || input === null) throw new Error("Invalid input");
     const { name, payload } = input as { name?: unknown; payload?: unknown };
     if (typeof name !== "string" || name.length === 0) throw new Error("Name is required");
