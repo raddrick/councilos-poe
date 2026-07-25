@@ -78,14 +78,20 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "CouncilOS — Proof of Effort on Monad" },
+      { title: "CouncilOS Console — Proof of Effort on Monad" },
       {
         name: "description",
         content:
-          "On-chain product councils: Directors define founders and products, fractionals steward seats, executors deliver efforts.",
+          "CouncilOS is an EVM smart contract primitive for StudioOS-style venture studios. A Director defines a Founder and Product together. The Founder owns the Product",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { property: "og:title", content: "CouncilOS Console — Proof of Effort on Monad" },
+      { name: "twitter:title", content: "CouncilOS Console — Proof of Effort on Monad" },
+      { property: "og:description", content: "CouncilOS is an EVM smart contract primitive for StudioOS-style venture studios. A Director defines a Founder and Product together. The Founder owns the Product" },
+      { name: "twitter:description", content: "CouncilOS is an EVM smart contract primitive for StudioOS-style venture studios. A Director defines a Founder and Product together. The Founder owns the Product" },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/e3feafc4-45d7-4f00-a98e-ca9c339c43fc" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/e3feafc4-45d7-4f00-a98e-ca9c339c43fc" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },

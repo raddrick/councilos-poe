@@ -21,13 +21,13 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Connect MetaMask on Monad Testnet to define founders and products, appoint council seats, and track Proof of Effort.",
+          "CouncilOS is an EVM smart contract primitive for StudioOS-style venture studios. A Director defines a Founder and Product together. The Founder owns the Product",
       },
       { property: "og:title", content: "CouncilOS Console — Proof of Effort on Monad" },
       {
         property: "og:description",
         content:
-          "Director-grade console for StudioOS Product Councils: products, fractional chairs, executors and verified efforts.",
+          "CouncilOS is an EVM smart contract primitive for StudioOS-style venture studios. A Director defines a Founder and Product together. The Founder owns the Product",
       },
     ],
   }),
