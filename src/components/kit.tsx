@@ -1,4 +1,10 @@
-import type { ButtonHTMLAttributes, InputHTMLAttributes, ReactNode, SelectHTMLAttributes } from "react";
+import type {
+  ButtonHTMLAttributes,
+  InputHTMLAttributes,
+  ReactNode,
+  SelectHTMLAttributes,
+  TextareaHTMLAttributes,
+} from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -46,6 +52,18 @@ export function Select({ className, ...props }: SelectHTMLAttributes<HTMLSelectE
       {...props}
       className={cn(
         "w-full rounded-md border border-input bg-background/70 px-3 py-2 font-mono text-sm text-foreground focus:border-primary focus:outline-none",
+        className,
+      )}
+    />
+  );
+}
+
+export function Textarea({ className, ...props }: TextareaHTMLAttributes<HTMLTextAreaElement>) {
+  return (
+    <textarea
+      {...props}
+      className={cn(
+        "w-full rounded-md border border-input bg-background/70 px-3 py-2 font-mono text-sm text-foreground placeholder:text-muted-foreground/60 focus:border-primary focus:outline-none",
         className,
       )}
     />

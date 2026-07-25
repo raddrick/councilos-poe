@@ -1,8 +1,10 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { keccak256, toUtf8Bytes } from "ethers";
 import { useState } from "react";
+import { toast } from "sonner";
 
 import { Badge, Button, Field, Input, Panel, Select, Stat } from "@/components/kit";
+import { IpfsPinPanel } from "@/components/IpfsPinPanel";
 import {
   CHAIR_STATUS,
   EFFORT_STATUS,
@@ -324,6 +326,32 @@ function ProductPage() {
                     </div>
                   ))}
                 </div>
+              </div>
+            </Panel>
+          </div>
+
+          <div className="mt-6 grid gap-6 lg:grid-cols-2">
+            <IpfsPinPanel
+              title="Pin effort metadata"
+              onUse={(uri) => {
+                setEffortURI(uri);
+                toast.success("Effort metadata URI filled in");
+              }}
+            />
+            <Panel title="Effort metadata" subtitle="What to pin for Proof of Effort.">
+              <div className="space-y-3 text-sm text-muted-foreground">
+                <p>
+                  The metadata URI should describe the work being claimed. Typical JSON fields:
+                </p>
+                <ul className="list-disc space-y-1 pl-4 font-mono text-xs text-foreground">
+                  <li>title — short name of the deliverable</li>
+                  <li>description — what was done and why it matters</li>
+                  <li>proof — links, commit hashes, screenshots, files</li>
+                  <li>scope — which VSM system and seat it supports</li>
+                </ul>
+                <p className="label-mono">
+                  Pinning requires a Pinata JWT secret configured by the project owner.
+                </p>
               </div>
             </Panel>
           </div>
