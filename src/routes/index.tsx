@@ -8,6 +8,7 @@ import {
   EFFORT_STATUS,
   PARTICIPANT_ROLES,
   SEAT_TYPES,
+  VSM_SYSTEMS,
   explorerAddress,
   formatTimestamp,
   shortAddress,
@@ -72,6 +73,13 @@ export function effortTone(status: number) {
   return "danger" as const;
 }
 
+const LEDGER_FILTERS = [
+  { key: "all", label: "All" },
+  { key: "0", label: "Submitted" },
+  { key: "1", label: "Peer verified" },
+  { key: "2", label: "Founder accepted" },
+] as const;
+
 function Console() {
   const { account, contractAddress, onMonad } = useWallet();
   const { data, isLoading, error } = useCouncilOverview();
@@ -80,9 +88,17 @@ function Console() {
   const [name, setName] = useState("");
   const [metadataURI, setMetadataURI] = useState("");
   const [founder, setFounder] = useState("");
+  const [filter, setFilter] = useState<string>("all");
 
   const isDirector =
     Boolean(account) && Boolean(data) && data!.director.toLowerCase() === account!.toLowerCase();
+
+  const efforts = (data?.efforts ?? []).slice().reverse();
+  const visibleEfforts =
+    filter === "all" ? efforts : efforts.filter((e) => String(e.status) === filter);
+  const accepted = efforts.filter((e) => e.status === 2).length;
+  const verified = efforts.filter((e) => e.status === 1).length;
+  const pendingCount = efforts.filter((e) => e.status === 0).length;
 
   return (
     <main className="mx-auto max-w-7xl px-5 py-8">
@@ -91,72 +107,13 @@ function Console() {
           <div className="flex flex-wrap items-center gap-2">
             <Badge tone="primary">Monad Testnet · chain 10143</Badge>
             <Badge tone="accent">Hackathon MVP</Badge>
-            <Badge tone="neutral">Solidity 0.8.24 · Hardhat · TypeScript</Badge>
           </div>
           <h1 className="mt-4 text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
-            Proof of Effort for <span className="text-primary">Venture Studio Product Councils</span>
+            The <span className="text-primary">Effort Ledger</span> for Product Councils
           </h1>
           <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{SUMMARY}</p>
-          <div className="mt-6 grid gap-4 sm:grid-cols-2">
-            <div>
-              <p className="label-mono">Problem</p>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Founder-led products often rely on scattered advice, invisible contribution, and
-                unclear ownership of who did what, when, and why it mattered. Product Councils need
-                a verifiable operating trail.
-              </p>
-            </div>
-            <div>
-              <p className="label-mono">Solution</p>
-              <p className="mt-1 text-sm text-muted-foreground">
-                A smart contract layer for founder-owned Product Councils. Directors define the
-                Founder and Product together, Founders appoint Fractional chairs, Executors can be
-                assigned, Efforts are submitted with VSM mappings, peers verify work, and Founders
-                accept useful contributions.
-              </p>
-            </div>
-          </div>
         </div>
       </section>
-
-      <div className="mt-6 grid gap-6 lg:grid-cols-[1.1fr_1fr]">
-        <Panel title="What it does" subtitle="The council primitive, on-chain.">
-          <ul className="flex flex-col gap-2">
-            {WHAT_IT_DOES.map((item) => (
-              <li key={item} className="flex gap-2 text-sm text-muted-foreground">
-                <span className="text-primary">▸</span>
-                {item}
-              </li>
-            ))}
-          </ul>
-        </Panel>
-        <Panel title="Why Monad" subtitle="Councils emit many small coordination events.">
-          <p className="text-sm leading-relaxed text-muted-foreground">
-            CouncilOS benefits from fast, low-cost EVM execution because Product Councils can create
-            many small coordination events: nominations, appointments, Effort submissions, peer
-            verifications, Founder acceptances, and revenue participation calculations.
-          </p>
-        </Panel>
-      </div>
-
-      <Panel
-        className="mt-6"
-        title="Council flow"
-        subtitle="The full lifecycle from definition to chair payout."
-      >
-        <ol className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
-          {DEMO_FLOW.map((step, i) => (
-            <li
-              key={step}
-              className="rounded-md border border-border bg-surface-2/40 p-3 text-sm text-muted-foreground"
-            >
-              <span className="label-mono block">Step {String(i + 1).padStart(2, "0")}</span>
-              {step}
-            </li>
-          ))}
-        </ol>
-      </Panel>
-
 
       {!contractAddress && (
         <Panel className="mt-6 border-warning/40" title="No contract configured">
@@ -173,15 +130,102 @@ function Console() {
         </Panel>
       )}
 
-      <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <Stat label="Director" value={shortAddress(data?.director)} />
-        <Stat label="Products" value={data?.products.length ?? "—"} />
-        <Stat label="Efforts" value={data?.efforts.length ?? "—"} />
-        <Stat
-          label="Your role"
-          value={!account ? "guest" : isDirector ? "director" : "participant"}
-        />
+      <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+        <Stat label="Total efforts" value={data?.efforts.length ?? "—"} />
+        <Stat label="Accepted" value={data ? accepted : "—"} />
+        <Stat label="Peer verified" value={data ? verified : "—"} />
+        <Stat label="Awaiting verification" value={data ? pendingCount : "—"} />
+        <Stat label="Councils" value={data?.products.length ?? "—"} />
       </div>
+
+      {/* ================= STAR OF THE SHOW ================= */}
+      <Panel
+        className="mt-6 border-primary/40 shadow-[0_0_60px_-30px_var(--color-primary)]"
+        title="Effort ledger"
+        subtitle="Every Proof of Effort record on-chain — submitted, peer verified, founder accepted."
+        actions={
+          <div className="flex flex-wrap gap-1.5">
+            {LEDGER_FILTERS.map((f) => (
+              <Button
+                key={f.key}
+                variant={filter === f.key ? "primary" : "outline"}
+                className="px-2.5 py-1 text-[10px]"
+                onClick={() => setFilter(f.key)}
+              >
+                {f.label}
+              </Button>
+            ))}
+          </div>
+        }
+      >
+        {isLoading && <p className="label-mono">Loading chain state…</p>}
+        {data && visibleEfforts.length === 0 && (
+          <p className="label-mono">No efforts to show for this filter.</p>
+        )}
+        <div className="flex flex-col gap-2">
+          {visibleEfforts.map((effort) => {
+            const product = data?.products.find((p) => p.id === effort.productId);
+            return (
+              <article
+                key={effort.id}
+                className="rounded-md border border-border bg-surface-2/40 p-4 transition-colors hover:border-primary/60"
+              >
+                <div className="flex flex-wrap items-center gap-3">
+                  <span className="font-mono text-sm text-primary">
+                    E-{effort.id.toString().padStart(3, "0")}
+                  </span>
+                  <Link
+                    to="/product/$id"
+                    params={{ id: String(effort.productId) }}
+                    className="text-base font-semibold text-foreground hover:text-primary"
+                  >
+                    {product?.name ?? `Product ${effort.productId}`}
+                  </Link>
+                  <Badge tone="neutral">{PARTICIPANT_ROLES[effort.role]}</Badge>
+                  {effort.seatIndex < 8 && (
+                    <Badge tone="accent">{SEAT_TYPES[effort.seatIndex]}</Badge>
+                  )}
+                  <Badge tone="primary">{VSM_SYSTEMS[effort.vsmSystem]}</Badge>
+                  <Badge tone={effortTone(effort.status)} className="ml-auto">
+                    {EFFORT_STATUS[effort.status]}
+                  </Badge>
+                </div>
+                <dl className="mt-3 grid gap-2 sm:grid-cols-4">
+                  <div>
+                    <dt className="label-mono">Submitted by</dt>
+                    <dd>
+                      <a
+                        href={explorerAddress(effort.submittedBy)}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="font-mono text-xs text-foreground hover:text-primary"
+                      >
+                        {shortAddress(effort.submittedBy)}
+                      </a>
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="label-mono">Submitted at</dt>
+                    <dd className="font-mono text-xs text-foreground">
+                      {formatTimestamp(effort.submittedAt)}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="label-mono">Peer votes</dt>
+                    <dd className="font-mono text-xs text-foreground">{effort.peerVotes}</dd>
+                  </div>
+                  <div>
+                    <dt className="label-mono">Evidence</dt>
+                    <dd className="truncate font-mono text-xs text-foreground">
+                      {effort.metadataURI || "—"}
+                    </dd>
+                  </div>
+                </dl>
+              </article>
+            );
+          })}
+        </div>
+      </Panel>
 
       <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_1.4fr]">
         <Panel
@@ -226,9 +270,7 @@ function Console() {
             >
               Define product
             </Button>
-            {!account && (
-              <p className="label-mono">Connect MetaMask to sign director actions.</p>
-            )}
+            {!account && <p className="label-mono">Connect MetaMask to sign director actions.</p>}
             {account && !isDirector && (
               <p className="label-mono">
                 Connected wallet is not the director ({shortAddress(data?.director)}).
@@ -245,7 +287,7 @@ function Console() {
           <div className="flex flex-col gap-3">
             {data?.products.map((product) => {
               const productEfforts = data.efforts.filter((e) => e.productId === product.id);
-              const accepted = productEfforts.filter((e) => e.status === 2).length;
+              const acceptedCount = productEfforts.filter((e) => e.status === 2).length;
               return (
                 <Link
                   key={product.id}
@@ -263,7 +305,9 @@ function Console() {
                     <Badge tone={product.active ? "success" : "danger"}>
                       {product.active ? "active" : "paused"}
                     </Badge>
-                    <Badge tone="neutral">{accepted}/{productEfforts.length} accepted</Badge>
+                    <Badge tone="neutral">
+                      {acceptedCount}/{productEfforts.length} accepted
+                    </Badge>
                   </div>
                   <dl className="mt-3 grid gap-2 sm:grid-cols-3">
                     <div>
@@ -300,10 +344,7 @@ function Console() {
             toast.success("Metadata URI filled in");
           }}
         />
-        <Panel
-          title="IPFS metadata"
-          subtitle="How the metadata URI works in CouncilOS."
-        >
+        <Panel title="IPFS metadata" subtitle="How the metadata URI works in CouncilOS.">
           <div className="space-y-3 text-sm text-muted-foreground">
             <p>
               The contract stores a <code className="text-foreground">metadataURI</code> string for
@@ -312,59 +353,48 @@ function Console() {
             </p>
             <p>
               Paste a JSON blob here, click <strong>Pin to IPFS</strong>, and the console returns an{" "}
-              <code className="text-foreground">ipfs://…</code> URI. Use the product metadata panel
-              on the left or the effort metadata field on a council page.
-            </p>
-            <p className="label-mono">
-              Requires a Pinata JWT secret. Add it via the secure form when prompted.
+              <code className="text-foreground">ipfs://…</code> URI.
             </p>
           </div>
         </Panel>
       </div>
 
-      <Panel className="mt-6" title="Effort ledger" subtitle="All Proof of Effort records on-chain.">
-        {data && data.efforts.length === 0 && <p className="label-mono">No efforts submitted yet.</p>}
-        <div className="flex flex-col gap-2">
-          {data?.efforts
-            .slice()
-            .reverse()
-            .map((effort) => {
-              const product = data.products.find((p) => p.id === effort.productId);
-              return (
-                <div
-                  key={effort.id}
-                  className="flex flex-wrap items-center gap-3 rounded-md border border-border bg-surface-2/40 px-4 py-3"
-                >
-                  <span className="font-mono text-xs text-muted-foreground">
-                    E-{effort.id.toString().padStart(3, "0")}
-                  </span>
-                  <Link
-                    to="/product/$id"
-                    params={{ id: String(effort.productId) }}
-                    className="text-sm font-medium text-foreground hover:text-primary"
-                  >
-                    {product?.name ?? `Product ${effort.productId}`}
-                  </Link>
-                  <Badge tone="neutral">{PARTICIPANT_ROLES[effort.role]}</Badge>
-                  {effort.seatIndex < 8 && (
-                    <Badge tone="accent">{SEAT_TYPES[effort.seatIndex]}</Badge>
-                  )}
-                  <a
-                    href={explorerAddress(effort.submittedBy)}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="font-mono text-xs text-muted-foreground hover:text-primary"
-                  >
-                    {shortAddress(effort.submittedBy)}
-                  </a>
-                  <span className="label-mono">{effort.peerVotes} peer votes</span>
-                  <Badge tone={effortTone(effort.status)} className="ml-auto">
-                    {EFFORT_STATUS[effort.status]}
-                  </Badge>
-                </div>
-              );
-            })}
-        </div>
+      <div className="mt-6 grid gap-6 lg:grid-cols-[1.1fr_1fr]">
+        <Panel title="What it does" subtitle="The council primitive, on-chain.">
+          <ul className="flex flex-col gap-2">
+            {WHAT_IT_DOES.map((item) => (
+              <li key={item} className="flex gap-2 text-sm text-muted-foreground">
+                <span className="text-primary">▸</span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </Panel>
+        <Panel title="Why Monad" subtitle="Councils emit many small coordination events.">
+          <p className="text-sm leading-relaxed text-muted-foreground">
+            CouncilOS benefits from fast, low-cost EVM execution because Product Councils can create
+            many small coordination events: nominations, appointments, Effort submissions, peer
+            verifications, Founder acceptances, and revenue participation calculations.
+          </p>
+        </Panel>
+      </div>
+
+      <Panel
+        className="mt-6"
+        title="Council flow"
+        subtitle="The full lifecycle from definition to chair payout."
+      >
+        <ol className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+          {DEMO_FLOW.map((step, i) => (
+            <li
+              key={step}
+              className="rounded-md border border-border bg-surface-2/40 p-3 text-sm text-muted-foreground"
+            >
+              <span className="label-mono block">Step {String(i + 1).padStart(2, "0")}</span>
+              {step}
+            </li>
+          ))}
+        </ol>
       </Panel>
 
       <Panel className="mt-6" title="Future work" subtitle="Beyond the hackathon MVP.">
@@ -377,6 +407,6 @@ function Console() {
         </div>
       </Panel>
     </main>
-
   );
 }
+
