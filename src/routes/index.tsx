@@ -8,6 +8,7 @@ import {
   EFFORT_STATUS,
   PARTICIPANT_ROLES,
   SEAT_TYPES,
+  VSM_SYSTEMS,
   explorerAddress,
   formatTimestamp,
   shortAddress,
