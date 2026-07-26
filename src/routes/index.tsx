@@ -366,6 +366,17 @@ function Console() {
             })}
         </div>
       </Panel>
+
+      <Panel className="mt-6" title="Future work" subtitle="Beyond the hackathon MVP.">
+        <div className="flex flex-wrap gap-2">
+          {FUTURE_WORK.map((item) => (
+            <Badge key={item} tone="neutral">
+              {item}
+            </Badge>
+          ))}
+        </div>
+      </Panel>
     </main>
+
   );
 }
