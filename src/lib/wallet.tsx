@@ -15,6 +15,8 @@ import {
   DEFAULT_CONTRACT_ADDRESS,
   MONAD_TESTNET,
 } from "./councilos";
+import { getAppConfig } from "./config.functions";
+
 
 type Eip1193Provider = {
   request: (args: { method: string; params?: unknown[] }) => Promise<unknown>;
