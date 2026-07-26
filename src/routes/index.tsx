@@ -16,25 +16,54 @@ import { useCouncilOverview } from "@/lib/council-data";
 import { useTx } from "@/lib/tx";
 import { useWallet } from "@/lib/wallet";
 
+const SUMMARY =
+  "An on-chain Product Council primitive where Fractionals and Executors submit VSM-mapped Efforts, peers verify them, and Founders accept useful contribution evidence.";
+
+const WHAT_IT_DOES = [
+  "Defines founder-owned products through a Director-governed flow",
+  "Creates 8-seat Product Councils",
+  "Lets Founders appoint peer-nominated Fractional chairs",
+  "Lets Founders assign Executors",
+  "Records VSM-mapped Efforts",
+  "Requires peer verification before Founder acceptance",
+  "Calculates 1% chair participation from eligible revenue",
+];
+
+const DEMO_FLOW = [
+  "Director defines Founder + Product",
+  "Founder appoints Product Council chairs",
+  "Founder assigns Executor",
+  "Fractional submits Effort",
+  "Peer chair verifies Effort",
+  "Founder accepts Effort",
+  "Founder records eligible revenue",
+  "Contract calculates chair payout",
+];
+
+const FUTURE_WORK = [
+  "StudioOS frontend integration",
+  "IPFS metadata upload",
+  "Soulbound badge credentials",
+  "Contribution Memory dashboard",
+  "Revenue escrow",
+  "Stablecoin payout support",
+  "Multi-council analytics",
+];
+
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "CouncilOS Console — Proof of Effort on Monad" },
-      {
-        name: "description",
-        content:
-          "CouncilOS is an EVM smart contract primitive for StudioOS-style venture studios. A Director defines a Founder and Product together. The Founder owns the Product",
-      },
-      { property: "og:title", content: "CouncilOS Console — Proof of Effort on Monad" },
-      {
-        property: "og:description",
-        content:
-          "CouncilOS is an EVM smart contract primitive for StudioOS-style venture studios. A Director defines a Founder and Product together. The Founder owns the Product",
-      },
+      { title: "CouncilOS — Proof of Effort for Product Councils" },
+      { name: "description", content: SUMMARY },
+      { property: "og:title", content: "CouncilOS — Proof of Effort for Product Councils" },
+      { property: "og:description", content: SUMMARY },
+      { property: "og:url", content: "https://councilos-poe.lovable.app/" },
     ],
+    links: [{ rel: "canonical", href: "https://councilos-poe.lovable.app/" }],
   }),
   component: Console,
 });
+
 
 export function effortTone(status: number) {
   if (status === 2) return "success" as const;
