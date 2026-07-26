@@ -78,18 +78,20 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "CouncilOS Console — Proof of Effort on Monad" },
+      { title: "CouncilOS: Proof of Effort for Venture Studio Product Councils" },
       {
         name: "description",
         content:
-          "CouncilOS is an EVM smart contract primitive for StudioOS-style venture studios. A Director defines a Founder and Product together. The Founder owns the Product",
+          "An on-chain Product Council primitive where Fractionals and Executors submit VSM-mapped Efforts, peers verify them, and Founders accept useful contribution evidence.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:site_name", content: "CouncilOS" },
       { name: "twitter:card", content: "summary_large_image" },
-      { property: "og:title", content: "CouncilOS Console — Proof of Effort on Monad" },
-      { name: "twitter:title", content: "CouncilOS Console — Proof of Effort on Monad" },
-      { property: "og:description", content: "CouncilOS is an EVM smart contract primitive for StudioOS-style venture studios. A Director defines a Founder and Product together. The Founder owns the Product" },
-      { name: "twitter:description", content: "CouncilOS is an EVM smart contract primitive for StudioOS-style venture studios. A Director defines a Founder and Product together. The Founder owns the Product" },
+      { property: "og:title", content: "CouncilOS: Proof of Effort for Venture Studio Product Councils" },
+      { name: "twitter:title", content: "CouncilOS: Proof of Effort for Venture Studio Product Councils" },
+      { property: "og:description", content: "An on-chain Product Council primitive where Fractionals and Executors submit VSM-mapped Efforts, peers verify them, and Founders accept useful contribution evidence." },
+      { name: "twitter:description", content: "An on-chain Product Council primitive where Fractionals and Executors submit VSM-mapped Efforts, peers verify them, and Founders accept useful contribution evidence." },
+
       { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/e3feafc4-45d7-4f00-a98e-ca9c339c43fc" },
       { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/e3feafc4-45d7-4f00-a98e-ca9c339c43fc" },
     ],

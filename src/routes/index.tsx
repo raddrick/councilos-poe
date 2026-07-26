@@ -16,25 +16,54 @@ import { useCouncilOverview } from "@/lib/council-data";
 import { useTx } from "@/lib/tx";
 import { useWallet } from "@/lib/wallet";
 
+const SUMMARY =
+  "An on-chain Product Council primitive where Fractionals and Executors submit VSM-mapped Efforts, peers verify them, and Founders accept useful contribution evidence.";
+
+const WHAT_IT_DOES = [
+  "Defines founder-owned products through a Director-governed flow",
+  "Creates 8-seat Product Councils",
+  "Lets Founders appoint peer-nominated Fractional chairs",
+  "Lets Founders assign Executors",
+  "Records VSM-mapped Efforts",
+  "Requires peer verification before Founder acceptance",
+  "Calculates 1% chair participation from eligible revenue",
+];
+
+const DEMO_FLOW = [
+  "Director defines Founder + Product",
+  "Founder appoints Product Council chairs",
+  "Founder assigns Executor",
+  "Fractional submits Effort",
+  "Peer chair verifies Effort",
+  "Founder accepts Effort",
+  "Founder records eligible revenue",
+  "Contract calculates chair payout",
+];
+
+const FUTURE_WORK = [
+  "StudioOS frontend integration",
+  "IPFS metadata upload",
+  "Soulbound badge credentials",
+  "Contribution Memory dashboard",
+  "Revenue escrow",
+  "Stablecoin payout support",
+  "Multi-council analytics",
+];
+
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "CouncilOS Console — Proof of Effort on Monad" },
-      {
-        name: "description",
-        content:
-          "CouncilOS is an EVM smart contract primitive for StudioOS-style venture studios. A Director defines a Founder and Product together. The Founder owns the Product",
-      },
-      { property: "og:title", content: "CouncilOS Console — Proof of Effort on Monad" },
-      {
-        property: "og:description",
-        content:
-          "CouncilOS is an EVM smart contract primitive for StudioOS-style venture studios. A Director defines a Founder and Product together. The Founder owns the Product",
-      },
+      { title: "CouncilOS — Proof of Effort for Product Councils" },
+      { name: "description", content: SUMMARY },
+      { property: "og:title", content: "CouncilOS — Proof of Effort for Product Councils" },
+      { property: "og:description", content: SUMMARY },
+      { property: "og:url", content: "https://councilos-poe.lovable.app/" },
     ],
+    links: [{ rel: "canonical", href: "https://councilos-poe.lovable.app/" }],
   }),
   component: Console,
 });
+
 
 export function effortTone(status: number) {
   if (status === 2) return "success" as const;
@@ -58,18 +87,76 @@ function Console() {
   return (
     <main className="mx-auto max-w-7xl px-5 py-8">
       <section className="panel grid-lines relative overflow-hidden p-8">
-        <div className="relative max-w-2xl">
-          <Badge tone="primary">Monad Testnet · chain 10143</Badge>
+        <div className="relative max-w-3xl">
+          <div className="flex flex-wrap items-center gap-2">
+            <Badge tone="primary">Monad Testnet · chain 10143</Badge>
+            <Badge tone="accent">Hackathon MVP</Badge>
+            <Badge tone="neutral">Solidity 0.8.24 · Hardhat · TypeScript</Badge>
+          </div>
           <h1 className="mt-4 text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
-            Proof of Effort for <span className="text-primary">Product Councils</span>
+            Proof of Effort for <span className="text-primary">Venture Studio Product Councils</span>
           </h1>
-          <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-            A Director defines the product and its Founder. The Founder owns the council, eight
-            Fractionals steward the leadership seats, Executors deliver scoped Efforts, peers verify
-            the work, and the Founder accepts what is useful to the product.
-          </p>
+          <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{SUMMARY}</p>
+          <div className="mt-6 grid gap-4 sm:grid-cols-2">
+            <div>
+              <p className="label-mono">Problem</p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Founder-led products often rely on scattered advice, invisible contribution, and
+                unclear ownership of who did what, when, and why it mattered. Product Councils need
+                a verifiable operating trail.
+              </p>
+            </div>
+            <div>
+              <p className="label-mono">Solution</p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                A smart contract layer for founder-owned Product Councils. Directors define the
+                Founder and Product together, Founders appoint Fractional chairs, Executors can be
+                assigned, Efforts are submitted with VSM mappings, peers verify work, and Founders
+                accept useful contributions.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
+
+      <div className="mt-6 grid gap-6 lg:grid-cols-[1.1fr_1fr]">
+        <Panel title="What it does" subtitle="The council primitive, on-chain.">
+          <ul className="flex flex-col gap-2">
+            {WHAT_IT_DOES.map((item) => (
+              <li key={item} className="flex gap-2 text-sm text-muted-foreground">
+                <span className="text-primary">▸</span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </Panel>
+        <Panel title="Why Monad" subtitle="Councils emit many small coordination events.">
+          <p className="text-sm leading-relaxed text-muted-foreground">
+            CouncilOS benefits from fast, low-cost EVM execution because Product Councils can create
+            many small coordination events: nominations, appointments, Effort submissions, peer
+            verifications, Founder acceptances, and revenue participation calculations.
+          </p>
+        </Panel>
+      </div>
+
+      <Panel
+        className="mt-6"
+        title="Council flow"
+        subtitle="The full lifecycle from definition to chair payout."
+      >
+        <ol className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+          {DEMO_FLOW.map((step, i) => (
+            <li
+              key={step}
+              className="rounded-md border border-border bg-surface-2/40 p-3 text-sm text-muted-foreground"
+            >
+              <span className="label-mono block">Step {String(i + 1).padStart(2, "0")}</span>
+              {step}
+            </li>
+          ))}
+        </ol>
+      </Panel>
+
 
       {!contractAddress && (
         <Panel className="mt-6 border-warning/40" title="No contract configured">
@@ -279,6 +366,17 @@ function Console() {
             })}
         </div>
       </Panel>
+
+      <Panel className="mt-6" title="Future work" subtitle="Beyond the hackathon MVP.">
+        <div className="flex flex-wrap gap-2">
+          {FUTURE_WORK.map((item) => (
+            <Badge key={item} tone="neutral">
+              {item}
+            </Badge>
+          ))}
+        </div>
+      </Panel>
     </main>
+
   );
 }
