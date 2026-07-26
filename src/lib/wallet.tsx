@@ -15,6 +15,8 @@ import {
   DEFAULT_CONTRACT_ADDRESS,
   MONAD_TESTNET,
 } from "./councilos";
+import { getAppConfig } from "./config.functions";
+
 
 type Eip1193Provider = {
   request: (args: { method: string; params?: unknown[] }) => Promise<unknown>;
@@ -57,11 +59,20 @@ export function WalletProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const stored = window.localStorage.getItem(ADDRESS_STORAGE_KEY);
-    if (stored) setContractAddressState(stored);
+    if (stored) {
+      setContractAddressState(stored);
+    } else {
+      void getAppConfig()
+        .then((cfg) => {
+          if (cfg.contractAddress) setContractAddressState(cfg.contractAddress);
+        })
+        .catch(() => undefined);
+    }
 
     const injected = getInjected();
     setHasWallet(Boolean(injected));
     if (!injected) return;
+
 
     void injected
       .request({ method: "eth_accounts" })
