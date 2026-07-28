@@ -1,6 +1,6 @@
 # CouncilOS: Proof of Effort for StudioOS Product Councils
 
-A hackathon-ready Monad/EVM package for testing the StudioOS Product Council model.
+A Monad/EVM package for testing the StudioOS Product Council model.
 
 ## Correct StudioOS authority model
 
